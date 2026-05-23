@@ -15,25 +15,58 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (
+  e: React.FormEvent
+) => {
 
-    setLoading(true);
+  e.preventDefault();
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  setLoading(true);
 
-    setLoading(false);
+  const { error } =
+    await supabase.auth
+      .signInWithPassword({
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+        email,
 
-    router.push("/dashboard");
-  };
+        password,
+      });
+
+  setLoading(false);
+
+  if (error) {
+
+    alert(error.message);
+
+    return;
+  }
+
+  const { data: userData } =
+    await supabase.auth.getUser();
+
+  const userEmail =
+    userData.user?.email;
+
+  const { data: profile } =
+    await supabase
+      .from("profiles")
+      .select("role")
+      .eq("email", userEmail)
+      .single();
+
+  if (
+    profile?.role === "admin"
+  ) {
+
+    window.location.href =
+      "/admin";
+
+  } else {
+
+    window.location.href =
+      "/dashboard";
+  }
+};
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-6">

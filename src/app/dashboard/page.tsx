@@ -19,22 +19,56 @@ export default function DashboardPage() {
 
   const router = useRouter();
 
-  useEffect(() => {
+ useEffect(() => {
 
-    const checkUser = async () => {
+  const checkUser = async () => {
+
+    // Wait for Supabase auth hydration
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    console.log("SESSION:", session);
+
+    // If session still null,
+    // listen for auth restoration
+
+    if (!session) {
 
       const {
-        data: { session },
-      } = await supabase.auth.getSession();
+        data: listener,
+      } = supabase.auth.onAuthStateChange(
 
-      if (!session) {
-        router.push("/login");
-      }
-    };
+        async (event, session) => {
 
-    checkUser();
+          console.log(
+            "AUTH EVENT:",
+            event
+          );
 
-  }, [router]);
+          console.log(
+            "RESTORED SESSION:",
+            session
+          );
+
+          if (!session) {
+
+            window.location.href="/login"
+
+          }
+        }
+      );
+
+      return () => {
+        listener.subscription.unsubscribe();
+      };
+    }
+  };
+
+  checkUser();
+
+}, [router]);
 
   const handleLogout = async () => {
 

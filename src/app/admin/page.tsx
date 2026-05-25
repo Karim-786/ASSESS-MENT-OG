@@ -94,8 +94,8 @@ export default function AdminPage() {
           .select("role")
 
           .eq(
-            "id",
-            session.user.id
+            "email",
+            user.email
           )
 
           .maybeSingle();

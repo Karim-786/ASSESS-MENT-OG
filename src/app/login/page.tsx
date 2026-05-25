@@ -71,6 +71,7 @@ const handleLogin = async (
     "/dashboard"
   );
 }
+};
 return (
 
     <main className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-6">

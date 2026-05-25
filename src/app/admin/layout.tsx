@@ -25,31 +25,54 @@ export default function AdminLayout({
     const checkAdmin =
       async () => {
 
-        const {
-          data: { session },
-        } = await supabase.auth
-          .getSession();
+        // IMPORTANT
 
-        if (!session) {
+        const {
+          data: { user },
+        } = await supabase.auth
+          .getUser();
+
+        console.log("USER:", user);
+
+        if (!user) {
 
           router.replace("/login");
 
           return;
         }
 
-        const { data: profile } =
-          await supabase
-            .from("profiles")
-            .select("role")
-            .eq(
-              "email",
-              session.user.email
-            )
-            .maybeSingle();
+        console.log(
+          "EMAIL:",
+          user.email
+        );
+
+        const {
+          data: profile,
+          error,
+        } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("email", user.email)
+          .single();
+
+        console.log(
+          "PROFILE:",
+          profile
+        );
+
+        console.log(
+          "ERROR:",
+          error
+        );
 
         if (
-          profile?.role !== "admin"
+          !profile ||
+          profile.role !== "admin"
         ) {
+
+          alert(
+            "No admin profile found"
+          );
 
           router.replace(
             "/dashboard"
@@ -71,7 +94,7 @@ export default function AdminLayout({
 
       <div className="min-h-screen flex items-center justify-center text-2xl font-bold">
 
-        Loading Admin Panel...
+        Loading Admin...
 
       </div>
     );

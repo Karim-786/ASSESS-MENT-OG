@@ -16,18 +16,27 @@ export default function RegisterPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("NAME:", name);
-    console.log("EMAIL:", email);
-    console.log("PASSWORD:", password);
+  const handleRegister = async (
+  e: React.FormEvent<HTMLFormElement>
+) => {
 
-    setLoading(true);
+  e.preventDefault();
 
-    const { data,error } = await supabase.auth.signUp({
-      
+  console.log("NAME:", name);
+  console.log("EMAIL:", email);
+  console.log("PASSWORD:", password);
+
+  setLoading(true);
+
+  // SIGNUP
+
+  const { data, error } =
+    await supabase.auth.signUp({
+
       email,
+
       password,
+
       options: {
         data: {
           full_name: name,
@@ -35,18 +44,40 @@ export default function RegisterPage() {
       },
     });
 
-    console.log("DATA:", data);
-    console.log("ERROR:", error);
-    if (error) {
-      alert(error.message);
-      return;
-    }
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-    alert("Registration Successful!");
+  if (error) {
 
-    router.push("/login");
-  };
+    alert(error.message);
 
+    setLoading(false);
+
+    return;
+  }
+
+  // INSERT PROFILE
+
+  const { error: profileError } =
+    await supabase
+      .from("profiles")
+      .insert([
+        {
+          email,
+          role: "student",
+        },
+      ]);
+
+  console.log(profileError);
+
+  alert(
+    "Registration Successful!"
+  );
+
+  router.push("/login");
+
+  setLoading(false);
+};
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-6">
 

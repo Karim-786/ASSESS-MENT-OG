@@ -64,83 +64,88 @@ export default function AdminPage() {
     };
   useEffect(() => {
 
-    const checkAdmin =
-      async () => {
+  const checkAdmin =
+    async () => {
 
-        const {
-          data: { session },
-        } = await supabase
-          .auth
-          .getSession();
+      const {
+        data: { session },
+      } = await supabase
+        .auth
+        .getSession();
 
-        // NOT LOGGED IN
+      // NOT LOGGED IN
 
-        if (!session) {
+      if (!session) {
 
-          router.push("/login");
+        router.push("/login");
 
-          return;
-        }
+        return;
+      }
 
-        // FETCH USER ROLE
+      // FETCH USER ROLE
 
-        const {
-          data: profile,
-          error,
-        } = await supabase
+      const {
+        data: profile,
+        error,
+      } = await supabase
 
-          .from("profiles")
+        .from("profiles")
 
-          .select("role")
+        .select("role")
 
-          .eq(
-            "email",
-            user.email
-          )
+        .eq(
+          "email",
+          session.user.email
+        )
 
-          .maybeSingle();
+        .maybeSingle();
 
-        if (error) {
+      console.log(profile);
 
-          console.error(error);
+      console.log(error);
 
-          return;
-        }
+      if (error) {
 
-        if (!profile) {
+        console.error(error);
 
-          alert(
-            "No admin profile found"
-          );
+        return;
+      }
 
-          router.push(
-            "/dashboard"
-          );
+      if (!profile) {
 
-          return;
-        }
-        // NOT ADMIN
-
-        if (
-          profile?.role !==
-          "admin"
-        ) {
-
-          router.push(
-            "/dashboard"
-          );
-
-          return;
-        }
-
-        console.log(
-          "Admin Access Granted"
+        alert(
+          "No admin profile found"
         );
-      };
 
-    checkAdmin();
+        router.push(
+          "/dashboard"
+        );
 
-  }, [router]);
+        return;
+      }
+
+      // NOT ADMIN
+
+      if (
+        profile?.role !==
+        "admin"
+      ) {
+
+        router.push(
+          "/dashboard"
+        );
+
+        return;
+      }
+
+      console.log(
+        "Admin Access Granted"
+      );
+    };
+
+  checkAdmin();
+
+}, [router]);
   return (
 
     <main className="min-h-screen bg-[#f5f5f5] p-10">

@@ -53,23 +53,24 @@ const handleLogin = async (
 
   setLoading(false);
 
-  if (
-    profile?.role === "admin"
-  ) {
+ if (
+  profile?.role === "admin"
+) {
 
-    window.location.replace(
-      "/admin"
-    );
+  console.log("GO ADMIN");
 
-  } else {
+  window.location.replace(
+    "/admin"
+  );
 
-    window.location.replace(
-      "/dashboard"
-    );
-  }
+} else {
 
-}; // ← THIS WAS MISSING
+  console.log("GO DASHBOARD");
 
+  window.location.replace(
+    "/dashboard"
+  );
+}
 return (
 
     <main className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-6">

@@ -25,8 +25,6 @@ export default function AdminLayout({
     const checkAdmin =
       async () => {
 
-        // IMPORTANT
-
         const {
           data: { user },
         } = await supabase.auth
@@ -40,11 +38,6 @@ export default function AdminLayout({
 
           return;
         }
-
-        console.log(
-          "EMAIL:",
-          user.email
-        );
 
         const {
           data: profile,
@@ -70,10 +63,6 @@ export default function AdminLayout({
           profile.role !== "admin"
         ) {
 
-          alert(
-            "No admin profile found"
-          );
-
           router.replace(
             "/dashboard"
           );
@@ -92,7 +81,7 @@ export default function AdminLayout({
 
     return (
 
-      <div className="min-h-screen flex items-center justify-center text-2xl font-bold">
+      <div className="min-h-screen flex items-center justify-center">
 
         Loading Admin...
 

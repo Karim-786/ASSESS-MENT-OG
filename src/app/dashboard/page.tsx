@@ -1,74 +1,20 @@
 "use client";
 
-import { useEffect } from "react";
-
 import {
   LayoutDashboard,
   ClipboardList,
-  FileText,
-  User,
-  BarChart3,
   LogOut,
 } from "lucide-react";
 
-import { supabase } from "@/app/lib/supabase";
+import { supabase }
+from "@/app/lib/supabase";
 
-import { useRouter } from "next/navigation";
+import { useRouter }
+from "next/navigation";
 
 export default function DashboardPage() {
 
   const router = useRouter();
-
- useEffect(() => {
-
-  const checkUser = async () => {
-
-    // Wait for Supabase auth hydration
-
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    console.log("SESSION:", session);
-
-    // If session still null,
-    // listen for auth restoration
-
-    if (!session) {
-
-      const {
-        data: listener,
-      } = supabase.auth.onAuthStateChange(
-
-        async (event, session) => {
-
-          console.log(
-            "AUTH EVENT:",
-            event
-          );
-
-          console.log(
-            "RESTORED SESSION:",
-            session
-          );
-
-          if (!session) {
-
-            window.location.href="/login"
-
-          }
-        }
-      );
-
-      return () => {
-        listener.subscription.unsubscribe();
-      };
-    }
-  };
-
-  checkUser();
-
-}, [router]);
 
   const handleLogout = async () => {
 
@@ -78,26 +24,31 @@ export default function DashboardPage() {
   };
 
   return (
+
     <main className="min-h-screen bg-[#f5f5f5] flex">
 
-      {/* SIDEBAR */}
       <aside className="w-72 bg-[#1f2937] text-white p-8 flex flex-col">
 
         <div>
+
           <h1 className="text-4xl font-black text-red-600">
             OneGrasp
           </h1>
 
-          <p className="text-gray-00 text-sm tracking-[3px] mt-2 py-4">
+          <p className="text-sm tracking-[3px] mt-2 py-4">
             ASSESSMENT PLATFORM
           </p>
+
         </div>
 
         <nav className="mt-14 flex flex-col gap-4">
 
           <button className="flex items-center gap-4 bg-red-600 px-5 py-4 rounded-2xl font-medium">
+
             <LayoutDashboard size={22} />
+
             Dashboard
+
           </button>
 
           <button
@@ -113,7 +64,6 @@ export default function DashboardPage() {
 
           </button>
 
-
         </nav>
 
         <div className="mt-auto">
@@ -122,15 +72,17 @@ export default function DashboardPage() {
             onClick={handleLogout}
             className="w-full flex items-center justify-center gap-3 px-5 py-4 rounded-2xl bg-red-600 hover:bg-red-700 transition font-medium"
           >
+
             <LogOut size={20} />
+
             Logout
+
           </button>
 
         </div>
 
       </aside>
 
-      {/* CONTENT */}
       <section className="flex-1 p-10">
 
         <div className="bg-white rounded-[32px] shadow-sm border border-gray-200 p-8">

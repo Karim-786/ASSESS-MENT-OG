@@ -54,16 +54,19 @@ export default function LoginPage() {
     setLoading(false);
 
     if (
-      profile?.role === "admin"
-    ) {
+  profile?.role === "admin"
+) {
 
-      router.push("/admin");
+  window.location.replace(
+    "/admin"
+  );
 
-    } else {
+} else {
 
-      router.push("/dashboard");
-    }
-  };
+  window.location.replace(
+    "/dashboard"
+  );
+}
 
   return (
 

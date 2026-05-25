@@ -10,65 +10,63 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] =
+    useState("");
 
-  const [loading, setLoading] = useState(false);
+  const [password, setPassword] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
 
   const handleLogin = async (
-  e: React.FormEvent
-) => {
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
 
-  e.preventDefault();
+    e.preventDefault();
 
-  setLoading(true);
+    setLoading(true);
 
-  const { error } =
-    await supabase.auth
-      .signInWithPassword({
+    const { error } =
+      await supabase.auth
+        .signInWithPassword({
 
-        email,
+          email,
+          password,
+        });
 
-        password,
-      });
+    if (error) {
 
-  setLoading(false);
+      alert(error.message);
 
-  if (error) {
+      setLoading(false);
 
-    alert(error.message);
+      return;
+    }
 
-    return;
-  }
+    const { data: profile } =
+      await supabase
+        .from("profiles")
+        .select("role")
+        .eq("email", email)
+        .maybeSingle();
 
-  const { data: userData } =
-    await supabase.auth.getUser();
+    setLoading(false);
 
-  const userEmail =
-    userData.user?.email;
+    if (
+      profile?.role === "admin"
+    ) {
 
-  const { data: profile } =
-    await supabase
-      .from("profiles")
-      .select("role")
-      .eq("email", userEmail)
-      .maybeSingle()
+      router.push("/admin");
 
-  if (
-    profile?.role === "admin"
-  ) {
+    } else {
 
-    window.location.href =
-      "/admin";
-
-  } else {
-
-    window.location.href =
-      "/dashboard";
-  }
-};
+      router.push("/dashboard");
+    }
+  };
 
   return (
+
     <main className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-6">
 
       <div className="w-full max-w-md bg-white rounded-[32px] shadow-xl border border-gray-200 p-10">
@@ -90,7 +88,6 @@ export default function LoginPage() {
           className="mt-10 space-y-6"
         >
 
-          {/* Email */}
           <div>
 
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -99,14 +96,19 @@ export default function LoginPage() {
 
             <div className="flex items-center border border-gray-300 rounded-2xl px-4 py-4">
 
-              <Mail size={20} className="text-gray-400" />
+              <Mail
+                size={20}
+                className="text-gray-400"
+              />
 
               <input
                 type="email"
                 placeholder="Enter email"
                 className="w-full ml-3 outline-none"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
                 required
               />
 
@@ -114,7 +116,6 @@ export default function LoginPage() {
 
           </div>
 
-          {/* Password */}
           <div>
 
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -123,14 +124,19 @@ export default function LoginPage() {
 
             <div className="flex items-center border border-gray-300 rounded-2xl px-4 py-4">
 
-              <Lock size={20} className="text-gray-400" />
+              <Lock
+                size={20}
+                className="text-gray-400"
+              />
 
               <input
                 type="password"
                 placeholder="Enter password"
                 className="w-full ml-3 outline-none"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) =>
+                  setPassword(e.target.value)
+                }
                 required
               />
 
@@ -138,25 +144,33 @@ export default function LoginPage() {
 
           </div>
 
-          {/* Button */}
           <button
             type="submit"
             disabled={loading}
             className="w-full py-4 rounded-2xl bg-red-600 text-white font-semibold hover:bg-red-700 transition"
           >
-            {loading ? "Logging In..." : "Login"}
+
+            {
+              loading
+                ? "Logging In..."
+                : "Login"
+            }
+
           </button>
 
         </form>
 
         <p className="mt-8 text-center text-gray-600">
+
           Don’t have an account?{" "}
+
           <Link
             href="/register"
             className="text-red-600 font-semibold hover:underline"
           >
             Register
           </Link>
+
         </p>
 
       </div>

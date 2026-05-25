@@ -52,7 +52,7 @@ export default function LoginPage() {
       .from("profiles")
       .select("role")
       .eq("email", userEmail)
-      .single();
+      .maybeSingle()
 
   if (
     profile?.role === "admin"

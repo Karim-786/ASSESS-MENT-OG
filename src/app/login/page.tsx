@@ -19,56 +19,58 @@ export default function LoginPage() {
   const [loading, setLoading] =
     useState(false);
 
-  const handleLogin = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+const handleLogin = async (
+  e: React.FormEvent<HTMLFormElement>
+) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    setLoading(true);
+  setLoading(true);
 
-    const { error } =
-      await supabase.auth
-        .signInWithPassword({
+  const { error } =
+    await supabase.auth
+      .signInWithPassword({
 
-          email,
-          password,
-        });
+        email,
+        password,
+      });
 
-    if (error) {
+  if (error) {
 
-      alert(error.message);
-
-      setLoading(false);
-
-      return;
-    }
-
-    const { data: profile } =
-      await supabase
-        .from("profiles")
-        .select("role")
-        .eq("email", email)
-        .maybeSingle();
+    alert(error.message);
 
     setLoading(false);
 
-    if (
-  profile?.role === "admin"
-) {
+    return;
+  }
 
-  window.location.replace(
-    "/admin"
-  );
+  const { data: profile } =
+    await supabase
+      .from("profiles")
+      .select("role")
+      .eq("email", email)
+      .maybeSingle();
 
-} else {
+  setLoading(false);
 
-  window.location.replace(
-    "/dashboard"
-  );
-}
+  if (
+    profile?.role === "admin"
+  ) {
 
-  return (
+    window.location.replace(
+      "/admin"
+    );
+
+  } else {
+
+    window.location.replace(
+      "/dashboard"
+    );
+  }
+
+}; // ← THIS WAS MISSING
+
+return (
 
     <main className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-6">
 
